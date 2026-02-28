@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Math 3201 Unit 5 – Polynomial Characteristics (Degree 0–3)</title>
+
+  <!-- Desmos API -->
+  <script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=desmos"></script>
+
+  <style>
+    :root { --border:#e5e7eb; --text:#111827; --muted:#6b7280; --bg:#ffffff; --btn:#111827; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; color: var(--text); background: var(--bg); }
+    header { padding: 18px 18px 10px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 10; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 14px 18px 28px; }
+    h1 { font-size: 18px; margin: 0 0 8px; }
+    .sub { color: var(--muted); font-size: 13px; margin: 0; }
+
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center; }
+    .tabbtn {
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .tabbtn[aria-selected="true"] { background: var(--btn); color: white; border-color: var(--btn); }
+
+    .tools { margin-left: auto; display:flex; gap:8px; flex-wrap: wrap; }
+    .toolbtn {
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .toolbtn.primary { background: var(--btn); color: #fff; border-color: var(--btn); }
+
+    .section { display: none; padding-top: 14px; }
+    .section.active { display: block; }
+    .grid { display: grid; gap: 14px; grid-template-columns: 1.1fr 0.9fr; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+    .card { border: 1px solid var(--border); border-radius: 14px; padding: 14px; background: #fff; }
+    .card h2 { font-size: 16px; margin: 0 0 8px; }
+    .card h3 { font-size: 14px; margin: 14px 0 6px; }
+    .card p { margin: 6px 0; font-size: 14px; line-height: 1.35; }
+    .hint { color: var(--muted); font-size: 13px; }
+
+    .calc { width: 100%; height: 430px; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .calc.small { height: 320px; }
+
+    .q { margin: 10px 0 6px; font-weight: 600; font-size: 13px; }
+    textarea, input[type="text"]{
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 10px;
+      font-size: 14px;
+      outline: none;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    .row { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+    @media (max-width: 700px) { .row { grid-template-columns: 1fr; } }
+
+    .navrow { display:flex; gap: 10px; justify-content: space-between; margin-top: 14px; flex-wrap: wrap; }
+    .navbtn {
+      border: 1px solid var(--border);
+      background: var(--btn);
+      color: white;
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .navbtn.secondary { background: #f9fafb; color: var(--text); }
+
+    .footer-note { margin-top: 10px; color: var(--muted); font-size: 12px; }
+
+    .table { width: 100%; border-collapse: collapse; }
+    .table th, .table td { border: 1px solid var(--border); padding: 8px; font-size: 13px; vertical-align: top; }
+    .table th { background:#f9fafb; text-align: left; }
+
+    /* Print: hide graphs and navigation, print only response areas */
+    @media print {
+      header, .calc, .navrow, .tabs, .tools, .footer-note { display: none !important; }
+      .wrap { max-width: none; padding: 0; }
+      .card { border: none; }
+      .section { display: block !important; page-break-after: always; }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap" style="padding:0 18px;">
+    <h1>Math 3201 – Unit 5: Polynomial Characteristics (Degree 0–3)</h1>
+    <p class="sub">Tabs = “pages”. Your answers save automatically on this device. Use Print to save as PDF.</p>
+
+    <div class="tabs" role="tablist" aria-label="Activity sections">
+      <button class="tabbtn" role="tab" aria-selected="true"  data-target="s0">Start</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-target="s1">Degree & Families</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-target="s2">Constant</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-target="s3">Linear</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-target="s4">Quadratic</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-target="s5">Cubic Explore</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-target="s6">Table Practice</button>
+      <button class="tabbtn" role="tab" aria-selected="false" data-target="s7">Summary / Exit</button>
+
+      <div class="tools">
+        <button class="toolbtn" onclick="resetResponses()">Reset answers</button>
+        <button class="toolbtn primary" onclick="window.print()">Print / Save as PDF</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- Start -->
+  <section id="s0" class="section active" role="tabpanel">
+    <div class="card">
+      <h2>Start</h2>
+      <p>
+        You will explore polynomial graphs of degree <b>0, 1, 2, and 3</b>. Record:
+        degree, leading coefficient sign, constant term (y-intercept), end behaviour, turning points, and x-intercepts.
+      </p>
+      <p class="hint">Tip: End behaviour = what happens far left and far right (read left → right).</p>
+
+      <div class="q">Student name:</div>
+      <input type="text" data-save="name" placeholder="Type your name" />
+
+      <div class="navrow">
+        <button class="navbtn secondary" onclick="goTo('s0')">You are here</button>
+        <button class="navbtn" onclick="goTo('s1')">Next →</button>
+      </div>
+
+      <p class="footer-note">Aligned to Unit 5 notes: degree naming, intercepts, turning points, and end behaviour. :contentReference[oaicite:1]{index=1}</p>
+    </div>
+  </section>
+
+  <!-- Degree & Families -->
+  <section id="s1" class="section" role="tabpanel">
+    <div class="grid">
+      <div class="card">
+        <h2>Degree & Families</h2>
+        <p>Use sliders <b>n</b> (0–3) and <b>a</b> to explore how degree and leading coefficient affect the shape.</p>
+
+        <div class="q">1) For each n (0–3), describe the shape.</div>
+        <textarea data-save="families_shapes" placeholder="n=0: ...  n=1: ...  n=2: ...  n=3: ..."></textarea>
+
+        <div class="q">2) What does changing the sign of a do?</div>
+        <textarea data-save="families_a" placeholder="Describe what happens when a is positive vs negative."></textarea>
+
+        <div class="navrow">
+          <button class="navbtn secondary" onclick="goTo('s0')">← Back</button>
+          <button class="navbtn" onclick="goTo('s2')">Next → Constant</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Interactive Graph</h3>
+        <div id="calcFamilies" class="calc"></div>
+        <p class="hint">Try n=0,1,2,3. Then flip a from + to −.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Constant -->
+  <section id="s2" class="section" role="tabpanel">
+    <div class="grid">
+      <div class="card">
+        <h2>Constant Function (Degree 0)</h2>
+        <p>Explore <b>y = c</b>.</p>
+
+        <div class="row">
+          <div>
+            <div class="q">y-intercept:</div>
+            <input type="text" data-save="const_yint" placeholder="(0, ___)" />
+          </div>
+          <div>
+            <div class="q">Turning points:</div>
+            <input type="text" data-save="const_turn" placeholder="0, 1, 2, ..." />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <div class="q">Possible # of x-intercepts:</div>
+            <input type="text" data-save="const_xint" placeholder="0 (unless c=0)" />
+          </div>
+          <div>
+            <div class="q">End behaviour (left → right):</div>
+            <input type="text" data-save="const_end" placeholder="y stays at ..." />
+          </div>
+        </div>
+
+        <div class="q">Explain why the constant term is the y-intercept.</div>
+        <textarea data-save="const_explain" placeholder="Use the equation and/or the graph."></textarea>
+
+        <div class="navrow">
+          <button class="navbtn secondary" onclick="goTo('s1')">← Back</button>
+          <button class="navbtn" onclick="goTo('s3')">Next → Linear</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Interactive Graph</h3>
+        <div id="calcConstant" class="calc"></div>
+        <p class="hint">Try c positive, negative, and zero.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Linear -->
+  <section id="s3" class="section" role="tabpanel">
+    <div class="grid">
+      <div class="card">
+        <h2>Linear Function (Degree 1)</h2>
+        <p>Explore <b>y = mx + b</b> (keep <b>m ≠ 0</b>).</p>
+
+        <div class="row">
+          <div>
+            <div class="q">Leading coefficient (m):</div>
+            <input type="text" data-save="lin_m" placeholder="positive / negative" />
+          </div>
+          <div>
+            <div class="q">Constant term (b):</div>
+            <input type="text" data-save="lin_b" placeholder="b = ..." />
+          </div>
+        </div>
+
+        <div class="q">Describe end behaviour when m is positive vs negative.</div>
+        <textarea data-save="lin_end" placeholder="If m>0 then... If m<0 then..."></textarea>
+
+        <div class="q">How many x-intercepts can a line have? (assume m ≠ 0)</div>
+        <input type="text" data-save="lin_xint" placeholder="Usually 1 (unless it misses x-axis)" />
+
+        <div class="navrow">
+          <button class="navbtn secondary" onclick="goTo('s2')">← Back</button>
+          <button class="navbtn" onclick="goTo('s4')">Next → Quadratic</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Interactive Graph</h3>
+        <div id="calcLinear" class="calc"></div>
+        <p class="hint">If you set m=0, the x-intercept label won’t make sense.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quadratic -->
+  <section id="s4" class="section" role="tabpanel">
+    <div class="grid">
+      <div class="card">
+        <h2>Quadratic Function (Degree 2)</h2>
+        <p>Explore vertex form <b>y = a(x-h)^2 + k</b>.</p>
+
+        <div class="row">
+          <div>
+            <div class="q">Vertex:</div>
+            <input type="text" data-save="quad_vertex" placeholder="(h, k)" />
+          </div>
+          <div>
+            <div class="q">Axis of symmetry:</div>
+            <input type="text" data-save="quad_aos" placeholder="x = h" />
+          </div>
+        </div>
+
+        <div class="q">Possible number of x-intercepts for a parabola:</div>
+        <input type="text" data-save="quad_xint" placeholder="0, 1, or 2" />
+
+        <div class="q">How does the sign of a affect end behaviour?</div>
+        <textarea data-save="quad_end" placeholder="If a>0 ... If a<0 ..."></textarea>
+
+        <div class="navrow">
+          <button class="navbtn secondary" onclick="goTo('s3')">← Back</button>
+          <button class="navbtn" onclick="goTo('s5')">Next → Cubic</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Interactive Graph</h3>
+        <div id="calcQuadratic" class="calc"></div>
+        <p class="hint">Try different a, h, k values to see range and intercept changes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cubic Explore -->
+  <section id="s5" class="section" role="tabpanel">
+    <div class="grid">
+      <div class="card">
+        <h2>Cubic Explore (Degree 3)</h2>
+        <p>Investigate the cubic and record characteristics.</p>
+
+        <div class="row">
+          <div>
+            <div class="q">Leading coefficient (sign):</div>
+            <input type="text" data-save="cubic_lead" placeholder="positive or negative" />
+          </div>
+          <div>
+            <div class="q">Constant term (y-intercept):</div>
+            <input type="text" data-save="cubic_const" placeholder="y-intercept = ..." />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <div class="q"># of turning points (observed):</div>
+            <input type="text" data-save="cubic_turn" placeholder="0, 1, or 2" />
+          </div>
+          <div>
+            <div class="q"># of x-intercepts (observed):</div>
+            <input type="text" data-save="cubic_xint" placeholder="1, 2, or 3" />
+          </div>
+        </div>
+
+        <div class="q">End behaviour in words:</div>
+        <textarea data-save="cubic_end" placeholder="As x → -∞, y → ... and as x → +∞, y → ..."></textarea>
+
+        <div class="navrow">
+          <button class="navbtn secondary" onclick="goTo('s4')">← Back</button>
+          <button class="navbtn" onclick="goTo('s6')">Next → Table Practice</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Interactive Graph</h3>
+        <div id="calcCubic" class="calc"></div>
+        <p class="hint">This mirrors the “Explore Cubic Functions” idea in your notes. :contentReference[oaicite:2]{index=2}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Table Practice -->
+  <section id="s6" class="section" role="tabpanel">
+    <div class="grid">
+      <div class="card">
+        <h2>Table Practice</h2>
+        <p>Use the 4 graphs to fill the table (like the table practice in your notes). :contentReference[oaicite:3]{index=3}</p>
+
+        <table class="table" aria-label="Polynomial characteristics table">
+          <thead>
+            <tr>
+              <th>Graph</th>
+              <th>Degree</th>
+              <th>End Behaviour</th>
+              <th># x-intercepts</th>
+              <th># turning points</th>
+              <th>y-intercept (constant term)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1 (constant)</td>
+              <td><input type="text" data-save="t1_deg" /></td>
+              <td><input type="text" data-save="t1_end" /></td>
+              <td><input type="text" data-save="t1_x" /></td>
+              <td><input type="text" data-save="t1_turn" /></td>
+              <td><input type="text" data-save="t1_y" /></td>
+            </tr>
+            <tr>
+              <td>2 (linear)</td>
+              <td><input type="text" data-save="t2_deg" /></td>
+              <td><input type="text" data-save="t2_end" /></td>
+              <td><input type="text" data-save="t2_x" /></td>
+              <td><input type="text" data-save="t2_turn" /></td>
+              <td><input type="text" data-save="t2_y" /></td>
+            </tr>
+            <tr>
+              <td>3 (quadratic)</td>
+              <td><input type="text" data-save="t3_deg" /></td>
+              <td><input type="text" data-save="t3_end" /></td>
+              <td><input type="text" data-save="t3_x" /></td>
+              <td><input type="text" data-save="t3_turn" /></td>
+              <td><input type="text" data-save="t3_y" /></td>
+            </tr>
+            <tr>
+              <td>4 (cubic)</td>
+              <td><input type="text" data-save="t4_deg" /></td>
+              <td><input type="text" data-save="t4_end" /></td>
+              <td><input type="text" data-save="t4_x" /></td>
+              <td><input type="text" data-save="t4_turn" /></td>
+              <td><input type="text" data-save="t4_y" /></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="navrow">
+          <button class="navbtn secondary" onclick="goTo('s5')">← Back</button>
+          <button class="navbtn" onclick="goTo('s7')">Next → Summary</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Graphs</h3>
+        <div id="calcTable" class="calc"></div>
+        <p class="hint">Zoom/pan to estimate intercepts and turning points.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Summary / Exit -->
+  <section id="s7" class="section" role="tabpanel">
+    <div class="card">
+      <h2>Summary / Exit Ticket</h2>
+
+      <div class="q">1) Complete the rules:</div>
+      <div class="row">
+        <div>
+          <p class="hint">Maximum number of turning points =</p>
+          <input type="text" data-save="rule_turn" placeholder="degree − 1" />
+        </div>
+        <div>
+          <p class="hint">Maximum number of x-intercepts =</p>
+          <input type="text" data-save="rule_x" placeholder="degree" />
+        </div>
+      </div>
+
+      <div class="q">2) How is the constant term related to the y-intercept?</div>
+      <textarea data-save="exit_const" placeholder="Explain using an equation and/or a graph."></textarea>
+
+      <div class="q">3) How can you quickly tell degree 2 vs degree 3 from a graph?</div>
+      <textarea data-save="exit_deg2v3" placeholder="Mention turning points/end behaviour/shape."></textarea>
+
+      <div class="navrow">
+        <button class="navbtn secondary" onclick="goTo('s6')">← Back</button>
+        <button class="navbtn" onclick="goTo('s0')">Back to Start</button>
+      </div>
+
+      <p class="footer-note">Print this page to submit evidence. (Graphs hide when printing.)</p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // ---------- Tabs ----------
+  const tabButtons = Array.from(document.querySelectorAll(".tabbtn"));
+  const sections = Array.from(document.querySelectorAll(".section"));
+
+  function setActive(targetId) {
+    sections.forEach(s => s.classList.toggle("active", s.id === targetId));
+    tabButtons.forEach(b => b.setAttribute("aria-selected", String(b.dataset.target === targetId)));
+  }
+  function goTo(id) { setActive(id); window.scrollTo({ top: 0, behavior: "smooth" }); }
+  window.goTo = goTo;
+
+  tabButtons.forEach(btn => btn.addEventListener("click", () => goTo(btn.dataset.target)));
+
+  // ---------- Auto-save responses (localStorage) ----------
+  const KEY = "m3201_unit5_poly_responses_v1";
+  const saved = JSON.parse(localStorage.getItem(KEY) || "{}");
+
+  function loadResponses() {
+    document.querySelectorAll("[data-save]").forEach(el => {
+      const k = el.getAttribute("data-save");
+      if (saved[k] !== undefined) el.value = saved[k];
+      el.addEventListener("input", () => {
+        saved[k] = el.value;
+        localStorage.setItem(KEY, JSON.stringify(saved));
+      });
+    });
+  }
+
+  function resetResponses() {
+    if (!confirm("Clear all saved answers on this device?")) return;
+    localStorage.removeItem(KEY);
+    document.querySelectorAll("[data-save]").forEach(el => el.value = "");
+  }
+  window.resetResponses = resetResponses;
+
+  loadResponses();
+
+  // ---------- Desmos Helpers ----------
+  function makeCalc(containerId, opts = {}) {
+    const elt = document.getElementById(containerId);
+    return Desmos.GraphingCalculator(elt, {
+      expressions: true,
+      settingsMenu: true,
+      keypad: true,
+      zoomButtons: true,
+      ...opts
+    });
+  }
+  function add(calc, id, latex) { calc.setExpression({ id, latex }); }
+
+  // Families
+  const families = makeCalc("calcFamilies");
+  add(families, "n", "n=0");
+  add(families, "a", "a=1");
+  add(families, "f", "f(x)=a x^n");
+  add(families, "g", "y=f(x)");
+  add(families, "yint", "A=(0,f(0))");
+
+  // Constant
+  const constant = makeCalc("calcConstant");
+  add(constant, "c", "c=3");
+  add(constant, "line", "y=c");
+  add(constant, "yint", "A=(0,c)");
+  add(constant, "axis", "x=0");
+
+  // Linear
+  const linear = makeCalc("calcLinear");
+  add(linear, "m", "m=1");
+  add(linear, "b", "b=0");
+  add(linear, "line", "y=mx+b");
+  add(linear, "yint", "Y=(0,b)");
+  add(linear, "xint", "X=(-b/m,0)");
+
+  // Quadratic
+  const quad = makeCalc("calcQuadratic");
+  add(quad, "a", "a=1");
+  add(quad, "h", "h=0");
+  add(quad, "k", "k=0");
+  add(quad, "parab", "y=a(x-h)^2+k");
+  add(quad, "vertex", "V=(h,k)");
+  add(quad, "aos", "x=h");
+
+  // Cubic explore (example aligned to cubic investigation idea)
+  const cubic = makeCalc("calcCubic");
+  add(cubic, "poly", "y=-x^3+2x^2+2x-6");
+  add(cubic, "yint", "A=(0,-6)");
+
+  // Table practice graphs
+  const table = makeCalc("calcTable");
+  add(table, "c1", "y=3");
+  add(table, "l1", "y=-2x+1");
+  add(table, "q1", "y=(x-1)^2-3");
+  add(table, "cu1", "y=x^3-3x");
+</script>
+</body>
+</html>
